@@ -12,7 +12,7 @@ import glob
 import json
 import awsconfig
 
-def bulkStream(client,actions, **kwargs):
+def bulkStream(client,actions, stats_only=False, **kwargs):
     success, failed = 0, 0
 
     # list of errors to be collected is not stats_only
@@ -54,5 +54,6 @@ for fname in glob.glob('../../COCA/*.txt'):
     n = fname.split("/w")[1][0]
     with open(fname, encoding='ISO-8859-1') as f:
         csvreader = csv.reader(f, delimiter='\t')
+        print("Processing",fname)
         actions = ({"_index" : config['index'], "_type" : "ngram",'name':' '.join(l[1:]),'count':int(l[0]),'gram':int(n)} for l in csvreader)
-        bulkStream(es,actions)           
+        print(bulkStream(es,actions))           
