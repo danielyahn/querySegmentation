@@ -11,6 +11,7 @@ import csv
 import glob
 import json
 import awsconfig
+import time
 
 def bulkStream(client,actions, stats_only=False, **kwargs):
     success, failed = 0, 0
@@ -55,5 +56,7 @@ for fname in glob.glob('../../COCA/*.txt'):
     with open(fname, encoding='ISO-8859-1') as f:
         csvreader = csv.reader(f, delimiter='\t')
         print("Processing",fname)
+        start = time.time()
         actions = ({"_index" : config['index'], "_type" : "ngram",'name':' '.join(l[1:]),'count':int(l[0]),'gram':int(n)} for l in csvreader)
-        print(bulkStream(es,actions))           
+        print(bulkStream(es,actions))
+        print("Elapsed Time",time.time()-start)           
